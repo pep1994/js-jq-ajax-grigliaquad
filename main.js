@@ -18,28 +18,61 @@ $(document).ready(function(){
     function () {
       // salvo in una variabile il riferimento all'elemento cliccato in quel momento
       var self = $(this);
-      // eseguo chiamata ajax per farmi ritornare un numero random da 0 a 9
-      $.ajax({
-        url: "https://flynn.boolean.careers/exercises/api/random/int",
-        method: "GET",
-        success: function (data, stato) {
-          // salvo in una variabile il numero randomo ritornato dalla chiamata ajax
-          var numberRandom = data.response;
-          console.log(numberRandom);
-          if (numberRandom <= 5) {
-            self.css({
-              "background-color": "yellow"
+
+      // creo variabili per usare il template di handlebars
+      var target = $('#message-template').html();
+      var template = Handlebars.compile(target);
+
+      var context = {
+        state: "Error",
+        text: "Non puoi cliccare più di una volta sullo stesso square"
+      }
+
+      var templateHtml = template(context);
+
+
+      // faccio un controllo, se lo square ha la classe cliccato faccio apparire un messaggio di errore
+      if (self.hasClass('clicked')) {
+        $('body').append(templateHtml);
+
+        // altrimenti esegui tutto il resto
+      } else {
+        // eseguo chiamata ajax per farmi ritornare un numero random da 0 a 9
+        $.ajax({
+          url: "https://flynn.boolean.careers/exercises/api/random/int",
+          method: "GET",
+          success: function (data, stato) {
+            // salvo in una variabile il numero randomo ritornato dalla chiamata ajax
+            var numberRandom = data.response;
+            console.log(numberRandom);
+            
+            self.text(numberRandom); // al centro dello square cliccato appare il numero random
+
+            // aggiungo la classe "clicked" allo square cliccato
+            self.addClass('clicked');
+
+            // rimuovo il messaggio d'errore
+            $('.message').remove();
+
+            // se il numero è minore o uguale a 5 lo square si colora di giallo
+            if (numberRandom <= 5) {
+              self.css({
+                "background-color": "yellow"
+              });
+
+              // altrimenti si colora di verde
+            } else {
+              self.css({
+                "background-color": "green"
             });
-          } else {
-            self.css({
-              "background-color": "green"
-          });
+            }
+          },
+          error: function (richiesta, stato, errore) {
+
           }
-        },
-        error: function (richiesta, stato, errore) {
-          console.log(richiesta, stato, errore);
-        }
-      });
+        });
+      }
+
   });
 
 });
