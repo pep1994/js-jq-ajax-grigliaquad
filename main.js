@@ -13,13 +13,25 @@ $(document).ready(function(){
     container.append('<div class="square"></div>');
   }
 
+  // aggancio l'evento mouseenter agli square, delegando al container
+  container.on('mouseenter', '.square',
+    function () {
+      $(this).css({"transform": "scale(1.1)"});
+  });
+
+  // aggancio l'evento mouseleave agli square, delegando al container
+  container.on('mouseleave', '.square',
+    function () {
+      $(this).css({"transform": "scale(1)"});
+  });
+
   // aggancio l'evento click ai quadrati, delegandolo al container
   container.on('click', '.square',
     function () {
       // salvo in una variabile il riferimento all'elemento cliccato in quel momento
       var self = $(this);
 
-      // creo variabili per usare il template di handlebars
+      // creo variabili per usare il template di handlebars. Il template lo uso per creare il messaggio d'errore
       var target = $('#message-template').html();
       var template = Handlebars.compile(target);
 
@@ -45,7 +57,7 @@ $(document).ready(function(){
             // salvo in una variabile il numero randomo ritornato dalla chiamata ajax
             var numberRandom = data.response;
             console.log(numberRandom);
-            
+
             self.text(numberRandom); // al centro dello square cliccato appare il numero random
 
             // aggiungo la classe "clicked" allo square cliccato
