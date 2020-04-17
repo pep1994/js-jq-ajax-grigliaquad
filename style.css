@@ -1,0 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container-square {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 900px;
+  height: 700px;
+  margin: 50px auto;
+}
+
+.square {
+  border: solid 1px black;
+  flex-basis: calc(100% / 6);
+}
